@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/02/21 13:46:47 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/02/21 14:52:46 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRC_SRV		=	server.c
 
 LIBFT_DIR	=	utils/libft/
 
-OBJ_DIR		=	obj/
+#OBJ_DIR		=	obj/
 
 SRC_DIR		=	src/
 
@@ -46,11 +46,11 @@ CP			=	cp -f
 
 LIBFT		=	$(LIBFT_DIR)libft.a
 
-OBJ			=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
+#OBJ			=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
 INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/
 
-DEPS		=	$(addsuffix .d,$(basename $(OBJ)))
+#DEPS		=	$(addsuffix .d,$(basename $(OBJ)))
 
 #UTILS		=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
 
@@ -63,15 +63,15 @@ all: make_libft $(NAME_SRV) $(NAME_CLI)
 make_libft:
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJ_DIR)%.o: $(SRCS_DIR)%.c
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+#$(OBJ_DIR)%.o: $(SRCS_DIR)%.c
+#	mkdir -p $(dir $@)
+#	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 -include $(DEPS)
-$(NAME_SRV): $(OBJ) $(LIBFT) $(SRC_SRV)
+$(NAME_SRV): $(LIBFT) $(SRC_SRV)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_SRV) -L$(LIBFT_DIR) -lft -o $@
 
-$(NAME_CLI): $(OBJ) $(LIBFT) $(SRC_CLI)
+$(NAME_CLI):  $(LIBFT) $(SRC_CLI)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_CLI) -L$(LIBFT_DIR) -lft -o $@
 
 clean:
