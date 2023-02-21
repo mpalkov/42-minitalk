@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/02/20 19:00:33 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/02/21 14:18:18 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include <signal.h> //signals
 #include <stdio.h>
 #include <stdlib.h> //malloc, free
+#include "libft.h"
+#include "ft_printf.h"
+#include "get_next_line.h"
 
 //incluir libft y ft_printf y sustituir funciones de sistema
 

@@ -5,6 +5,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include "libft.h"
+#include "ft_printf.h"
+#include "get_next_line.h"
 
 #define USLP usleep(100);
 #define STRLEN_BITS (int)64
@@ -19,6 +22,7 @@ static int	fn_checkerr(int argc, char **argv)
 	if (argc != 3)
 	{
 		errn = -1;
+		//ft_putstr_fd en lugar de fprintf
 		fprintf(stderr, "2 arguments are required in the following order: One number (PID) and one string.\n");
 	}
 	return (errn);
@@ -31,7 +35,6 @@ static int	ft_snd_unit_bits(pid_t pid, int unitsize, size_t unit)
 	char	b = 0;
 	int		bit = 0;
 
-//	printf("src:	%lu\n----\nbits:	", unit);
 	while (bit < unitsize)
 	{
 		b = (unit >> bit) & 1;
@@ -39,11 +42,9 @@ static int	ft_snd_unit_bits(pid_t pid, int unitsize, size_t unit)
 			kill(pid, SIGUSR2);
 		else if (b == 0)
 			kill(pid, SIGUSR1);
-//		printf("%i", b);
 		++bit;
 		USLP
 	}
-//	printf("\n\n");
 	return (0);
 }
 
@@ -68,7 +69,7 @@ int	main(int argc, char **argv)
 
 	if ((errn = fn_checkerr(argc, argv)))
 		return (errn);
-	srv_pid = atoi(argv[2]);
+	srv_pid = ft_atoi(argv[2]);
 	ft_send(srv_pid, argv[1]);
 
 //	if ((errn = kill(srv_pid, SIGUSR1)) == -1)

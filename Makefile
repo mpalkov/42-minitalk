@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/02/09 14:11:03 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/02/21 13:46:47 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,27 +16,27 @@ NAME_SRV	=	server
 
 #---- FILES ----
 
-SRC_CL		=	client.c
+SRC_CLI		=	client.c
 
 SRC_SRV		=	server.c
 
 #---- DIRECTORIES ----
 
-LIBFT_DIR	=	utils/libft
+LIBFT_DIR	=	utils/libft/
 
 OBJ_DIR		=	obj/
 
-INCL_DIR	=	includes/
-
 SRC_DIR		=	src/
 
-UTILS_DIR	=	utils/
+#UTILS_DIR	=	utils/
 
 #---- COMMANDS ----
 
 CC			=	cc
 
-CFLAGS		=	-Wall -Werror -Wextra -MMD -MP -MT $@
+CFLAGS		+=	-MMD -MP -MT $@
+
+#CFLAGS		+=	-Wall -Werror -Wextra
 
 RM			=	rm -f
 
@@ -48,15 +48,15 @@ LIBFT		=	$(LIBFT_DIR)libft.a
 
 OBJ			=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
-INCLUDE		=	-I$(INCL_DIR)
+INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/
 
 DEPS		=	$(addsuffix .d,$(basename $(OBJ)))
 
-UTILS		=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
+#UTILS		=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
 
-SRCS		+=	$(addprefix $(SRC_DIR),$(SRC_PRINTF))
+#SRCS		+=	$(addprefix $(SRC_DIR),$(SRC_PRINTF))
 
-SRCS		+=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
+#SRCS		+=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
 
 all: make_libft $(NAME_SRV) $(NAME_CLI)
 
@@ -68,16 +68,19 @@ $(OBJ_DIR)%.o: $(SRCS_DIR)%.c
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 -include $(DEPS)
-$(NAME): $(OBJ) $(LIBFT) $(INCL_DIR)
-	$(CP) $(LIBFT_DIR) ./$(NAME)
-	ar -crs $(NAME) $(OBJ)
+$(NAME_SRV): $(OBJ) $(LIBFT) $(SRC_SRV)
+	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_SRV) -L$(LIBFT_DIR) -lft -o $@
+
+$(NAME_CLI): $(OBJ) $(LIBFT) $(SRC_CLI)
+	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_CLI) -L$(LIBFT_DIR) -lft -o $@
 
 clean:
-	$(MAKE) fclean -C $(LIBFT_DIR)
+	$(MAKE) clean -C $(LIBFT_DIR)
 	$(RM) -r $(OBJ_DIR)
 
 fclean: clean
 	$(RM) $(NAME)
+	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
