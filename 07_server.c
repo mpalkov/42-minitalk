@@ -6,11 +6,19 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/02/24 14:53:22 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/02/24 13:09:09 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
+#include <unistd.h> //write, sleep, usleep
+#include <signal.h> //signals
+#include <stdio.h>
+#include <stdlib.h> //malloc, free, exit
+#include "libft.h"
+#include "ft_printf.h"
+#include "get_next_line.h"
+
+calloc
 
 static int ft_inspectstr(int sig, size_t *i, size_t *len, int unitsize, char **str)
 {
@@ -75,10 +83,13 @@ static int	ft_checkpid(siginfo_t *info, size_t i)
 	return (-1);
 }
 
-static int	ft_restartsrv(t_control *ctrl)
+static int	ft_restartsrv(char **str, size_t *len, size_t *i, int *status)
 {
-	ft_ptr_freenull(ctrl->str);
-	ft_resetvars(ctrl->str);
+	ft_ptr_freenull(&str);
+	len = 0;
+	i = 0;
+	status = 2;
+
 	return (0);
 }
 
@@ -95,14 +106,21 @@ static int	ft_timeoutcheck(int s, int status)
 //	i == number of bit received in total (starting at 0)
 static void	fn_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 {
+	static char		*str = NULL;
+	static size_t	len = 0;
+	static size_t	i = 0;
+	static int		status = 2;
+	static pid_t	initpid = -42;
 	(void)ptr;
 	(void)sinfo;
 
-	if (ft_checkpid(sinfo, vars.i) == -1)
+	if (ft_checkpid == -1)
 	{
-		write(stderr, "Received signals from multiple PIDs simultaneously.\n",
-				52);
-		return ;
+		ft_ptr_freenull(&str);
+		write(stderr, "Error. Received signals from multiple PIDs simultaneously.\n",
+			   	59);
+		sleep(5)
+		return (-1);
 	}
 	if ((status = ft_rcvbits(sig - SIGUSR1, &i, &len, &str)) == 1)
 	{
@@ -120,23 +138,10 @@ static void	fn_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 	return;
 }
 
-void	ft_resetvars(t_control ctrl)
-{
-	ctrl->str = NULL;
-	ctrl->len = 0;
-	ctrl->i = 0;
-	ctrl->status = 2;
-	ctrl->initpid = -42;
-	return ;
-}
-
-t_control	vars;
-
 int	main(void)
 {
 	struct sigaction	s_sa = {0};
-
-	ft_resetvars(&vars);
+	
 	s_sa.sa_flags = SA_RESTART | SA_SIGINFO;
 	s_sa.sa_sigaction = fn_sigusr;
 	sigaction(SIGUSR1, &s_sa, NULL);
