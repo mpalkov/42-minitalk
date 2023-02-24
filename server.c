@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/02/21 14:18:18 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/02/24 12:21:03 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 #include "libft.h"
 #include "ft_printf.h"
 #include "get_next_line.h"
-
-//incluir libft y ft_printf y sustituir funciones de sistema
 
 static int ft_inspectstr(int sig, size_t *i, size_t *len, int unitsize, char **str)
 {
@@ -45,7 +43,10 @@ static int ft_rcvbits(int sig, size_t *i, size_t *len, char **str)
 	if (*i == (sizeof(*len) * 8 - 1))
 	{
 		if (!(*str = calloc(*len + 1, sizeof(char))))
+		{
+			write(stderr, "Error. Malloc problems.\n", 24);
 			return (-1);
+		}
 	}
 	//afterwards this will construct each str char with its bits untill final '\0' is detected after its' creation
 	else if (*i >= sizeof(*len) * 8)
@@ -63,46 +64,70 @@ static int ft_rcvbits(int sig, size_t *i, size_t *len, char **str)
 	return (0);
 }
 
-/* static int	ft_checkpid(siginfo_t *info, size_t i)
+static int	ft_checkpid(siginfo_t *info, size_t i)
 {
 	static pid_t	initpid = -5;
 
 	if (info->si_pid == initpid)
 		return (0);
-	else if (i == 0 && prev_pid == -5)
+	else if (i == 0 && initpid == -5)
 	{
-		prev_pid = info->si_pid;
+		initpid = info->si_pid;
 		return (0);
-	
 	}
 	return (-1);
 }
-*/
+
+static int	ft_restartsrv(char **str, size_t *len, size_t *i, int *status)
+{
+	ft_ptr_freenull(&str);
+	len = 0;
+	i = 0;
+	status = 2;
+
+	return (0);
+}
+
+static int	ft_timeoutcheck(int s, int status)
+{
+	while (s-- > 0)
+	{
+		if (usleep(1000000) == 0 && status != 2)
+			return (0);
+	}
+	return (-1);
+}
 
 static void	fn_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 {
 	static char		*str = NULL;
 	static size_t	len = 0;
+//					i = number of bit received in total (starting at 0)
 	static size_t	i = 0;
 	static int		status = 2;
 	(void)ptr;
 	(void)sinfo;
 
-//	if (ft_checkpid == -1)
-//		return (-1);
+	if (ft_checkpid == -1)
+	{
+		ft_ptr_freenull(&str);
+		write(stderr, "Error. Received signals from multiple PIDs simultaneously.\n",
+			   	59);
+		return (-1);
+	}
 	if ((status = ft_rcvbits(sig - SIGUSR1, &i, &len, &str)) == 1)
 	{
-		printf("\n\n***************\nReceived string length is: %lu bytes\nString: %s\nEND.\n************\n", len, str);
-		free(str);
-		str = NULL;
-		len = 0;
-		i = 0;
-		status = 2;
-	}
+		ft_printf("\n\n***************\nReceived string length is: %d bytes\nString: %s\nEND.\n************\n", len, str);
+		ft_restartsrv(&str, &len, &i, &status);
+		}
 	else 
 		++i;
-//	if (usleep(1000000) == 0 && status != 2)
-//	   return (-1);
+	if (ft_timeoutcheck(5))
+	{
+		ft_restartsrv(&str, &len, &i, &status);
+		write(stderr, "Timeout. No signal received in the last 5 seconds."
+				" Awaiting new message.\n", 73);
+	}
 	return;
 }
 
@@ -114,7 +139,7 @@ int	main(void)
 	s_sa.sa_sigaction = fn_sigusr;
 	sigaction(SIGUSR1, &s_sa, NULL);
 	sigaction(SIGUSR2, &s_sa, NULL); 
-	printf("PID: %d\n", getpid());
+	ft_printf("PID: %d\n", getpid());
 	while (1)
 	{
 		pause();

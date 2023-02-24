@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/24 12:21:31 by mpalkov           #+#    #+#             */
+/*   Updated: 2023/02/24 12:22:50 by mpalkov          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
@@ -13,7 +25,7 @@
 #define STRLEN_BITS (int)64
 
 //intercambiar el orden de recepcion de los argumentos para que el
-//pid sea el priero y el string el segundo (intercambiar argv[1] por 2 en main)
+//pid sea el primero y el string el segundo (intercambiar argv[1] por 2 en main)
 
 static int	fn_checkerr(int argc, char **argv)
 {
@@ -22,9 +34,15 @@ static int	fn_checkerr(int argc, char **argv)
 	if (argc != 3)
 	{
 		errn = -1;
-		//ft_putstr_fd en lugar de fprintf
-		fprintf(stderr, "2 arguments are required in the following order: One number (PID) and one string.\n");
+		write(stderr, "2 arguments are required in the following order: One number (PID) and one string.\n", 82);
+		}
+	while (argv[2][i])
+	{
+		if (!ft_isdigit(argv[2][i++])
+				write(stderr, "PID should be a positive number.\n", 33);
+				return (errn = -2)
 	}
+
 	return (errn);
 }
 
@@ -64,8 +82,8 @@ static int	ft_send(pid_t pid, char *str)
 
 int	main(int argc, char **argv)
 {
-	pid_t		srv_pid;
-	int	errn = 0;
+	pid_t	srv_pid;
+	int		errn = 0;
 
 	if ((errn = fn_checkerr(argc, argv)))
 		return (errn);

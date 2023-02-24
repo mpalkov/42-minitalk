@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/02/21 14:52:46 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/02/22 14:08:28 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ make_libft:
 #	mkdir -p $(dir $@)
 #	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
--include $(DEPS)
+#-include $(DEPS)
 $(NAME_SRV): $(LIBFT) $(SRC_SRV)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_SRV) -L$(LIBFT_DIR) -lft -o $@
 
