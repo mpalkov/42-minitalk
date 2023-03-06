@@ -6,88 +6,87 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/02/24 14:53:22 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/06 17:14:40 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static int ft_inspectstr(int sig, size_t *i, size_t *len, int unitsize, char **str)
+t_control	vars;
+
+
+void	ft_free_exit(void)
 {
-	(void)sig;
+	ft_ptr_freenull(&vars.str);
+	exit(EXIT_FAILURE);
+}
+
+static void	ft_resetvars(void)
+{
+	vars.str = NULL;
+	vars.len = 0;
+	vars.i = -1;
+	vars.status = 2;
+	vars.initpid = -42;
+	vars.strpos = 0;
+	vars.pos_bit = 0;
+	vars.sig = 0;
+	vars.sig_processed = 1;
+	return ;
+}
+
+static int	ft_restartsrv(void)
+{
+	ft_ptr_freenull(&vars.str);
+	ft_resetvars();
 	return (0);
 }
 
-	//sig argument is (sig - SIGUSR1) so it will be directly (int)1 or 0;
-	//strpos - position in the char * array.
-	//pos_bit - bit number in the strpos position.
-	//first unitsize will be size_t (64 bits), so 0 to 64 it will be this if()
-	// if counter arrived to complete the first bites-set which makes the len, create malloc of len length.
-	//afterwards the else if will construct each str char with its bits untill final '\0' is detected after its' creation
-	//
-		// strpos counts in which position of our string are we currently working
-		//
-		// pos_bit indicates, which is the currently received bit of our current byte (strpos)
-		//
-		//add the current bit to the current byte.
-		(*str)[strpos] = ((*str)[strpos]) | ((sig) << pos_bit);
-		//if received last bit of char, check if it was a '\0' which indicates end of the operation.
-static int ft_rcvbits(int sig, size_t *i, size_t *len, char **str)
+static int ft_rcvbits(int sig)
 {
-	static int	strpos;
-	static int	pos_bit;
-
-	strpos = 0;
-	pos_bit = 0;
-	if (*i < (sizeof(*len) * 8))
+	if (vars.i < (sizeof(vars.len) * 8))
+		vars.len = sig << vars.i | vars.len;
+	if (vars.i == (sizeof(vars.len) * 8 - 1))
 	{
-		*len = sig << *i | *len;
-	}
-	if (*i == (sizeof(*len) * 8 - 1))
-	{
-		if (!(*str = calloc(*len + 1, sizeof(char))))
+		if (!(vars.str = calloc(vars.len + 1, sizeof(char))))
 		{
-			write(stderr, "Error. Malloc problems.\n", 24);
-			exit (-1);
+			write(STDERR_FILENO, "Error! Malloc problems.\n", 24);
+			exit(EXIT_FAILURE);
 		}
 	}
-	else if (*i >= sizeof(*len) * 8)
+	else if (vars.i >= sizeof(vars.len) * 8)
 	{
-		strpos = (*i - sizeof(*len) * 8) / (sizeof(char) * 8);
-		pos_bit = (*i - sizeof(*len) * 8) % (sizeof(char) * 8);
-		(*str)[strpos] = ((*str)[strpos]) | ((sig) << pos_bit);
-		if (pos_bit == 7 && (*str)[strpos] == '\0')
-			return (1);
+		vars.strpos = (vars.i - sizeof(vars.len) * 8) / (sizeof(char) * 8);
+		vars.pos_bit = (vars.i - sizeof(vars.len) * 8) % (sizeof(char) * 8);
+		vars.str[vars.strpos] = (vars.str[vars.strpos]) | (sig << vars.pos_bit);
+		if (vars.pos_bit == 7 && vars.str[vars.strpos] == '\0')
+		{
+			if (vars.strpos == vars.len - 1)
+			{
+				vars.sig_processed = 1;
+				return (1);
+			}
+			else
+			{
+				ft_restartsrv();
+				if (write(STDERR_FILENO, "Error! Received bits mismatch.\n"
+						"Server restarted.\n", 49) == -1)
+					exit(EXIT_FAILURE);
+			}
+		}
 	}
+	vars.sig_processed = 1;
 	return (0);
 }
 
 static int	ft_checkpid(siginfo_t *info, size_t i)
 {
-	//modificar esta funcion. Crear una estructura en main y pasarla a toda fn.
-	if (info->si_pid == initpid)
+	if (info->si_pid == vars.initpid)
 		return (0);
-	else if (i == 0 && initpid == -42);
+	else if (vars.i == 0 && vars.initpid == -42)
 	{
-		initpid = info->si_pid;
+		vars.initpid = info->si_pid;
 		return (0);
-	}
-	return (-1);
-}
-
-static int	ft_restartsrv(t_control *ctrl)
-{
-	ft_ptr_freenull(ctrl->str);
-	ft_resetvars(ctrl->str);
-	return (0);
-}
-
-static int	ft_timeoutcheck(int s, int status)
-{
-	while (s-- > 0)
-	{
-		if (usleep(1000000) == 0 && status != 2)
-			return (0);
 	}
 	return (-1);
 }
@@ -96,55 +95,105 @@ static int	ft_timeoutcheck(int s, int status)
 static void	fn_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 {
 	(void)ptr;
-	(void)sinfo;
 
 	if (ft_checkpid(sinfo, vars.i) == -1)
-	{
-		write(stderr, "Received signals from multiple PIDs simultaneously.\n",
-				52);
 		return ;
-	}
-	if ((status = ft_rcvbits(sig - SIGUSR1, &i, &len, &str)) == 1)
-	{
-		ft_printf("\n\n***************\nReceived string length is: %d bytes\nString: %s\nEND.\n************\n", len, str);
-		ft_restartsrv(&str, &len, &i, &status);
-		}
-	else 
-		++i;
-	if (ft_timeoutcheck(5))
-	{
-		ft_restartsrv(&str, &len, &i, &status);
-		write(stderr, "Timeout. No signal received in the last 5 seconds."
-				" Awaiting new message.\n", 73);
-	}
-	return;
-}
 
-void	ft_resetvars(t_control ctrl)
-{
-	ctrl->str = NULL;
-	ctrl->len = 0;
-	ctrl->i = 0;
-	ctrl->status = 2;
-	ctrl->initpid = -42;
+	vars.sig = sig;
+	vars.sig_processed = 0;
+	++vars.i;
 	return ;
 }
 
-t_control	vars;
+static void	ft_sigint(int sig, siginfo_t *sinfo, void *ptr)
+{
+	ft_ptr_freenull(&vars.str);
+	ft_printf("\nSuccessfully liberated used memory."
+			"\nProgramm closed successfully.\n");
+	exit(EXIT_SUCCESS);
+}
+
+//		No free in this function on error, because no malloc was created yet.
+//		Exit directly
+//		No write protection, because program exits anyways right after write.
+static int	ft_siginit(struct sigaction *s_sa, struct sigaction *s_sigint)
+{
+	s_sa->sa_flags = SA_RESTART | SA_SIGINFO;
+	s_sa->sa_sigaction = fn_sigusr;
+	s_sigint->sa_flags = SA_RESTART | SA_SIGINFO;
+	s_sigint->sa_sigaction = ft_sigint;
+	if (sigaction(SIGUSR1, s_sa, NULL) < 0)
+	{
+		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
+		exit(EXIT_FAILURE);
+	}
+	if (sigaction(SIGUSR2, s_sa, NULL) < 0)
+	{
+		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
+		exit(EXIT_FAILURE);
+	}
+	if (sigaction(SIGINT, s_sigint, NULL) < 0)
+	{
+		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
+		exit(EXIT_FAILURE);
+	}
+	return (0);
+}
+
+static int	ft_printpid()
+{
+	if (ft_printf("PID: %d\n", getpid()) == -1)
+	{
+		write(STDERR_FILENO, "Error getting PID.\n", 19);
+		exit(EXIT_FAILURE);
+	}
+	return (0);
+}
+
+static int	ft_loop(void)
+{	
+	if (!vars.sig_processed)
+	{
+		if ((vars.status = ft_rcvbits(vars.sig - SIGUSR1)) == 1)
+		{
+			if (ft_printf("\n\nReceived string length is: %d bytes\n"
+						"String: %s\n\nAwaiting new transmission", \
+						vars.len, vars.str) == -1)
+				ft_free_exit();
+			ft_restartsrv();
+		}
+	}
+	return (0);
+}
+
+static int	ft_timeoutcheck(int s)
+{
+	while (s-- > 0)
+	{
+		if (usleep(999999) == 0 && vars.status == 0)
+			return (-1);
+	}
+	return (0);
+}
 
 int	main(void)
 {
 	struct sigaction	s_sa = {0};
-
-	ft_resetvars(&vars);
-	s_sa.sa_flags = SA_RESTART | SA_SIGINFO;
-	s_sa.sa_sigaction = fn_sigusr;
-	sigaction(SIGUSR1, &s_sa, NULL);
-	sigaction(SIGUSR2, &s_sa, NULL); 
-	ft_printf("PID: %d\n", getpid());
+	struct sigaction	s_sigint = {0};
+	
+	ft_resetvars();
+	ft_siginit(&s_sa, &s_sigint);
+	ft_printpid();
 	while (1)
 	{
-		pause();
+		if (ft_timeoutcheck(5) == -1)
+		{
+			ft_restartsrv();
+			if (ft_printf("Timeout! No signal received in the last 5 seconds.\n"
+					"Awaiting new message.\n") == -1)
+				ft_free_exit();
+		}
+		ft_loop();
 	}
 	return (0);
 }

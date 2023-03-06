@@ -48,7 +48,7 @@ LIBFT		=	$(LIBFT_DIR)libft.a
 
 #OBJ			=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
-INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/
+INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/ -I./includes/
 
 #DEPS		=	$(addsuffix .d,$(basename $(OBJ)))
 

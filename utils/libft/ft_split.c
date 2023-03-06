@@ -93,10 +93,8 @@ char	**ft_split(char const *s, char c)
 {
 	char	**split;
 	size_t	x;
-	size_t	y;
 
 	x = 0;
-	y = 0;
 	if (!s)
 		return (0);
 	split = ft_pri_malloc(s, c);
