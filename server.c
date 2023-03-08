@@ -61,7 +61,7 @@ static int ft_rcvbits(int sig)
 		vars.str[vars.strpos] = (vars.str[vars.strpos]) | (sig << vars.pos_bit);
 		if (vars.pos_bit == 7 && vars.str[vars.strpos] == '\0')
 		{
-			if (vars.strpos == vars.len - 1)
+			if (vars.strpos == vars.len)
 			{
 				vars.sig_processed = 1;
 				return (1);
@@ -83,25 +83,29 @@ static int	ft_checkpid(siginfo_t *info, size_t i)
 {
 	if (info->si_pid == vars.initpid)
 		return (0);
-	else if (vars.i == 0 && vars.initpid == -42)
+	else if (vars.i == -1 && vars.initpid == -42)
 	{
 		vars.initpid = info->si_pid;
 		return (0);
 	}
+//	ft_printf("ft_checkpid PID %d\ninitPID %d\n", info->si_pid, vars.initpid);
 	return (-1);
 }
 
 //	i == number of bit received in total (starting at 0)
-static void	fn_sigusr(int sig, siginfo_t *sinfo, void *ptr)
+static void	ft_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 {
 	(void)ptr;
 
+//	write(1, "fn_sigusr1\n", 11);
+//	ft_printf("ft_sigusr PID %d\ninitPID %d\ni = %d\n", sinfo->si_pid, vars.initpid, vars.i);
 	if (ft_checkpid(sinfo, vars.i) == -1)
 		return ;
 
 	vars.sig = sig;
 	vars.sig_processed = 0;
 	++vars.i;
+//	write(1, "fn_sigusr2\n", 11);
 	return ;
 }
 
@@ -119,7 +123,7 @@ static void	ft_sigint(int sig, siginfo_t *sinfo, void *ptr)
 static int	ft_siginit(struct sigaction *s_sa, struct sigaction *s_sigint)
 {
 	s_sa->sa_flags = SA_RESTART | SA_SIGINFO;
-	s_sa->sa_sigaction = fn_sigusr;
+	s_sa->sa_sigaction = ft_sigusr;
 	s_sigint->sa_flags = SA_RESTART | SA_SIGINFO;
 	s_sigint->sa_sigaction = ft_sigint;
 	if (sigaction(SIGUSR1, s_sa, NULL) < 0)
@@ -127,16 +131,22 @@ static int	ft_siginit(struct sigaction *s_sa, struct sigaction *s_sigint)
 		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
 		exit(EXIT_FAILURE);
 	}
+	else
+		ft_printf("sigaction 1 OK\n");
 	if (sigaction(SIGUSR2, s_sa, NULL) < 0)
 	{
 		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
 		exit(EXIT_FAILURE);
 	}
+	else
+		ft_printf("sigaction 2 OK\n");
 	if (sigaction(SIGINT, s_sigint, NULL) < 0)
 	{
 		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
 		exit(EXIT_FAILURE);
 	}
+	else
+		ft_printf("sigaction SIGINT OK\n");
 	return (0);
 }
 
@@ -151,28 +161,27 @@ static int	ft_printpid()
 }
 
 static int	ft_loop(void)
-{	
+{
 	if (!vars.sig_processed)
 	{
+//		write(1, "loop !sig_processed\n", 20);
 		if ((vars.status = ft_rcvbits(vars.sig - SIGUSR1)) == 1)
 		{
 			if (ft_printf("\n\nReceived string length is: %d bytes\n"
-						"String: %s\n\nAwaiting new transmission", \
+						"String: %s\n\nAwaiting new transmission\n", \
 						vars.len, vars.str) == -1)
 				ft_free_exit();
 			ft_restartsrv();
 		}
 	}
+//	write(1, "loop NOTHING happens\n", 21);
 	return (0);
 }
 
-static int	ft_timeoutcheck(int s)
+static int	ft_timeoutcheck(void)
 {
-	while (s-- > 0)
-	{
-		if (usleep(999999) == 0 && vars.status == 0)
-			return (-1);
-	}
+	if (usleep(5000000) == 0 && vars.status == 0)
+		return (-1);
 	return (0);
 }
 
@@ -186,7 +195,7 @@ int	main(void)
 	ft_printpid();
 	while (1)
 	{
-		if (ft_timeoutcheck(5) == -1)
+		if (ft_timeoutcheck() == -1)
 		{
 			ft_restartsrv();
 			if (ft_printf("Timeout! No signal received in the last 5 seconds.\n"

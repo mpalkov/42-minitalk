@@ -21,7 +21,7 @@
 #include "ft_printf.h"
 #include "get_next_line.h"
 
-#define USLP usleep(100);
+#define USLP usleep(200);
 #define STRLEN_BITS (int)64
 
 //intercambiar el orden de recepcion de los argumentos para que el
