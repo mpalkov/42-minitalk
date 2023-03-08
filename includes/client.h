@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sizeof.c                                           :+:      :+:    :+:   */
+/*   client.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/27 11:35:37 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/08 17:37:47 by mpalkov          ###   ########.fr       */
+/*   Created: 2023/03/08 17:51:20 by mpalkov           #+#    #+#             */
+/*   Updated: 2023/03/08 17:53:21 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <stdio.h>
+#include <unistd.h>		 //write
+#include <signal.h>		 //kill
+#include <sys/types.h>	 //pid_t
+#include <stdlib.h>		 //EXIT_FAILURE, EXIT_SUCCESS
+#include "libft.h"		 //ft_strlen
 
-int	main(void)
-{
-/*	printf("My system configuration:\n");
-	printf("sizeof size_t:	%lu\n", sizeof(size_t));
-	printf("sizeof ssize_t:	%lu\n", sizeof(ssize_t));
-	printf("sizeof int:	%lu\n", sizeof(int));
-	printf("sizeof char:	%lu\n", sizeof(char));
-	printf("sizeof long:	%lu\n", sizeof(long));
-	*/
-	int a = sizeof(int);
-	(void)a;
-	return (0);
-}
+#define USLP 100
+
+static int	fn_checkerr(int argc, char **argv);
+static int	ft_snd_unit_bits(pid_t pid, int unitsize, size_t unit);
+static int	ft_send(pid_t pid, char *str);

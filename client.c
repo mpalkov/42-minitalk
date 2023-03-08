@@ -6,22 +6,11 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 12:21:31 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/08 17:14:56 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/08 17:54:13 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <signal.h> //kill
-#include <stdio.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
-#include "libft.h"
-#include "ft_printf.h"
-#include "get_next_line.h"
-
-#define USLP 100
+#include "client.h"
 
 static int	fn_checkerr(int argc, char **argv)
 {
@@ -30,15 +19,16 @@ static int	fn_checkerr(int argc, char **argv)
 	i = 0;
 	if (argc != 3)
 	{
-		write(STDERR_FILENO, "2 arguments are required in the following"
-			" order: One number (PID) and one string.\n", 82);
+		write(STDERR_FILENO, "ERROR! 2 arguments are required in the following"
+			" order: One number (PID) and one string.\n", 89);
 		return (-1);
 	}
 	while (argv[1][i])
 	{
 		if (!ft_isdigit(argv[1][i++]))
 		{
-			write(STDERR_FILENO, "PID should be a positive number.\n", 33);
+			write(STDERR_FILENO, "ERROR! PID should be a positive"
+					" number.\n", 40);
 			return (-1);
 		}
 	}
@@ -46,7 +36,7 @@ static int	fn_checkerr(int argc, char **argv)
 }
 
 /*		SIGUSR1 == 30 (so for my server	SIGUSR1 == 0)
- *		SIGUSR2 == 31 (so for me			SIGUSR2 == 1) */
+ *		SIGUSR2 == 31 (so for my server SIGUSR2 == 1) */
 static int	ft_snd_unit_bits(pid_t pid, int unitsize, size_t unit)
 {
 	char	b;
@@ -59,7 +49,7 @@ static int	ft_snd_unit_bits(pid_t pid, int unitsize, size_t unit)
 		b = (unit >> bit) & 1;
 		if (kill(pid, SIGUSR1 + b) == -1)
 		{
-			write(STDERR_FILENO, "Error sending signals!\n", 23);
+			write(STDERR_FILENO, "Error sending signals! Wrong PID?\n", 34);
 			exit(EXIT_FAILURE);
 		}
 		++bit;

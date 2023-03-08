@@ -6,40 +6,13 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/08 17:14:59 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/08 18:07:39 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
 t_control	vars;
-
-void	ft_free_exit(void)
-{
-	ft_ptr_freenull(&vars.str);
-	exit(EXIT_FAILURE);
-}
-
-static void	ft_resetvars(void)
-{
-	vars.str = NULL;
-	vars.len = 0;
-	vars.i = -1;
-	vars.status = 2;
-	vars.initpid = -42;
-	vars.strpos = 0;
-	vars.pos_bit = 0;
-	vars.sig = 0;
-	vars.sig_processed = 1;
-	return ;
-}
-
-static int	ft_restartsrv(void)
-{
-	ft_ptr_freenull(&vars.str);
-	ft_resetvars();
-	return (0);
-}
 
 static int ft_rcvbits(int sig)
 {
@@ -78,39 +51,22 @@ static int ft_rcvbits(int sig)
 	return (0);
 }
 
-static int	ft_checkpid(siginfo_t *info)
-{
-	if (info->si_pid == vars.initpid)
-		return (0);
-	else if (vars.i == -1 && vars.initpid == -42)
-	{
-		vars.initpid = info->si_pid;
-		return (0);
-	}
-//	ft_printf("ft_checkpid PID %d\ninitPID %d\n", info->si_pid, vars.initpid);
-	return (-1);
-}
-
 //	i == number of bit received in total (starting at 0)
 static void	ft_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 {
 	(void)ptr;
 
-//	write(1, "fn_sigusr1\n", 11);
-//	ft_printf("ft_sigusr PID %d\ninitPID %d\ni = %d\n", sinfo->si_pid, vars.initpid, vars.i);
 	if (ft_checkpid(sinfo) == -1)
 		return ;
-
 	vars.sig = sig;
 	vars.sig_processed = 0;
 	++vars.i;
-//	write(1, "fn_sigusr2\n", 11);
 	return ;
 }
 
-//		No free in this function on error, because no malloc was created yet.
-//		Exit directly
-//		No write protection, because program exits anyways right after write.
+/*		No free in this function on error, because no malloc was created yet.
+ *		Exit directly
+ *		No write protection, because program exits anyways right after write. */
 static int	ft_siginit(struct sigaction *s_sa)
 {
 	s_sa->sa_flags = SA_RESTART | SA_SIGINFO;
@@ -132,21 +88,10 @@ static int	ft_siginit(struct sigaction *s_sa)
 	return (0);
 }
 
-static int	ft_printpid()
-{
-	if (ft_printf("PID: %d\n", getpid()) == -1)
-	{
-		write(STDERR_FILENO, "Error getting PID.\n", 19);
-		exit(EXIT_FAILURE);
-	}
-	return (0);
-}
-
 static int	ft_loop(void)
 {
 	if (!vars.sig_processed)
 	{
-//		write(1, "loop !sig_processed\n", 20);
 		if ((vars.status = ft_rcvbits(vars.sig - SIGUSR1)) == 1)
 		{
 			if (ft_printf("\n\nReceived string length is: %d bytes\n"
@@ -156,14 +101,6 @@ static int	ft_loop(void)
 			ft_restartsrv();
 		}
 	}
-//	write(1, "loop NOTHING happens\n", 21);
-	return (0);
-}
-
-static int	ft_timeoutcheck(void)
-{
-	if (usleep(5000000) == 0 && vars.status == 0)
-		return (-1);
 	return (0);
 }
 

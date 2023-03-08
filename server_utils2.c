@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sizeof.c                                           :+:      :+:    :+:   */
+/*   server_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/27 11:35:37 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/08 17:37:47 by mpalkov          ###   ########.fr       */
+/*   Created: 2023/03/08 18:07:04 by mpalkov           #+#    #+#             */
+/*   Updated: 2023/03/08 18:07:43 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include <stdio.h>
+#include "server.h"
 
-int	main(void)
+static int	ft_checkpid(siginfo_t *info)
 {
-/*	printf("My system configuration:\n");
-	printf("sizeof size_t:	%lu\n", sizeof(size_t));
-	printf("sizeof ssize_t:	%lu\n", sizeof(ssize_t));
-	printf("sizeof int:	%lu\n", sizeof(int));
-	printf("sizeof char:	%lu\n", sizeof(char));
-	printf("sizeof long:	%lu\n", sizeof(long));
-	*/
-	int a = sizeof(int);
-	(void)a;
-	return (0);
+	if (info->si_pid == vars.initpid)
+		return (0);
+	else if (vars.i == -1 && vars.initpid == -42)
+	{
+		vars.initpid = info->si_pid;
+		return (0);
+	}
+	return (-1);
 }
