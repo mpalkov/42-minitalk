@@ -6,13 +6,14 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/08 17:14:59 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/06 17:14:40 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
 t_control	vars;
+
 
 void	ft_free_exit(void)
 {
@@ -43,9 +44,9 @@ static int	ft_restartsrv(void)
 
 static int ft_rcvbits(int sig)
 {
-	if (vars.i < (ssize_t)(sizeof(vars.len) * 8))
+	if (vars.i < (sizeof(vars.len) * 8))
 		vars.len = sig << vars.i | vars.len;
-	if (vars.i == (ssize_t)(sizeof(vars.len) * 8 - 1))
+	if (vars.i == (sizeof(vars.len) * 8 - 1))
 	{
 		if (!(vars.str = calloc(vars.len + 1, sizeof(char))))
 		{
@@ -53,7 +54,7 @@ static int ft_rcvbits(int sig)
 			exit(EXIT_FAILURE);
 		}
 	}
-	else if (vars.i >= (ssize_t)(sizeof(vars.len) * 8))
+	else if (vars.i >= sizeof(vars.len) * 8)
 	{
 		vars.strpos = (vars.i - sizeof(vars.len) * 8) / (sizeof(char) * 8);
 		vars.pos_bit = (vars.i - sizeof(vars.len) * 8) % (sizeof(char) * 8);
@@ -78,7 +79,7 @@ static int ft_rcvbits(int sig)
 	return (0);
 }
 
-static int	ft_checkpid(siginfo_t *info)
+static int	ft_checkpid(siginfo_t *info, size_t i)
 {
 	if (info->si_pid == vars.initpid)
 		return (0);
@@ -98,7 +99,7 @@ static void	ft_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 
 //	write(1, "fn_sigusr1\n", 11);
 //	ft_printf("ft_sigusr PID %d\ninitPID %d\ni = %d\n", sinfo->si_pid, vars.initpid, vars.i);
-	if (ft_checkpid(sinfo) == -1)
+	if (ft_checkpid(sinfo, vars.i) == -1)
 		return ;
 
 	vars.sig = sig;
@@ -108,13 +109,23 @@ static void	ft_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 	return ;
 }
 
+static void	ft_sigint(int sig, siginfo_t *sinfo, void *ptr)
+{
+	ft_ptr_freenull(&vars.str);
+	ft_printf("\nSuccessfully liberated used memory."
+			"\nProgramm closed successfully.\n");
+	exit(EXIT_SUCCESS);
+}
+
 //		No free in this function on error, because no malloc was created yet.
 //		Exit directly
 //		No write protection, because program exits anyways right after write.
-static int	ft_siginit(struct sigaction *s_sa)
+static int	ft_siginit(struct sigaction *s_sa, struct sigaction *s_sigint)
 {
 	s_sa->sa_flags = SA_RESTART | SA_SIGINFO;
 	s_sa->sa_sigaction = ft_sigusr;
+	s_sigint->sa_flags = SA_RESTART | SA_SIGINFO;
+	s_sigint->sa_sigaction = ft_sigint;
 	if (sigaction(SIGUSR1, s_sa, NULL) < 0)
 	{
 		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
@@ -129,6 +140,13 @@ static int	ft_siginit(struct sigaction *s_sa)
 	}
 	else
 		ft_printf("sigaction 2 OK\n");
+	if (sigaction(SIGINT, s_sigint, NULL) < 0)
+	{
+		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
+		exit(EXIT_FAILURE);
+	}
+	else
+		ft_printf("sigaction SIGINT OK\n");
 	return (0);
 }
 
@@ -170,11 +188,12 @@ static int	ft_timeoutcheck(void)
 int	main(void)
 {
 	struct sigaction	s_sa = {0};
+	struct sigaction	s_sigint = {0};
 	
 	ft_resetvars();
-	ft_siginit(&s_sa);
+	ft_siginit(&s_sa, &s_sigint);
 	ft_printpid();
-	while (42)
+	while (1)
 	{
 		if (ft_timeoutcheck() == -1)
 		{
