@@ -27,6 +27,9 @@ INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/ -I./includes/
 SRV_OBJ		=	$(addprefix $(OBJ_DIR),$(SRC_SRV:.c=.o))
 SRV_DEP		=	$(addsuffix .d,$(basename $(SRV_OBJ)))
 
+$(OBJ_DIR)%.o: %.c Makefile
+
+
 
 
 all: $(NAME)
