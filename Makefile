@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/03/08 15:05:02 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/03/08 14:59:30 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,11 @@ SRC_SRV		=	server.c
 
 LIBFT_DIR	=	utils/libft/
 
+#OBJ_DIR		=	obj/
+
 SRC_DIR		=	src/
+
+#UTILS_DIR	=	utils/
 
 #---- COMMANDS ----
 
@@ -42,23 +46,53 @@ CP			=	cp -f
 
 LIBFT		=	$(LIBFT_DIR)libft.a
 
+#OBJ			=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
+
 INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/ -I./includes/
+
+#DEPS		=	$(addsuffix .d,$(basename $(OBJ)))
+
+#UTILS		=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
+
+#SRCS		+=	$(addprefix $(SRC_DIR),$(SRC_PRINTF))
+
+#SRCS		+=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
 
 all: $(NAME_SRV) $(NAME_CLI)
 
+#all: make_libft $(NAME_SRV) $(NAME_CLI)
+
+#make_libft:
+#	$(MAKE) -C $(LIBFT_DIR)
+
+$(OBJ_DIR)%.o: $(SRCS_DIR)%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+
+
+#$(NAME_SRV): $(LIBFT) $(SRC_SRV)
+
+-include $(DEPS)
 $(NAME_SRV): $(SRC_SRV)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_SRV) -L$(LIBFT_DIR) -lft -o $@
+
+#$(NAME_CLI): $(LIBFT) $(SRC_CLI)
 
 $(NAME_CLI): $(SRC_CLI)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_CLI) -L$(LIBFT_DIR) -lft -o $@
 
 clean:
+#	$(MAKE) clean -C $(LIBFT_DIR)
 	$(RM) -r $(OBJ_DIR)
 	$(RM) -r *.d 
 
 fclean: clean
-	$(RM) $(NAME_SRV) $(NAME_CLI)
+	$(RM) $(NAME)
+#	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
-.PHONY: all, clean, fclean, re
+deps:
+	echo d $(DEPS) $(OBJ) $(CFLAGS) $(LIBFT)
+
+.PHONY: all, clean, fclean, re, deps

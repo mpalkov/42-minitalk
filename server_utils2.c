@@ -6,13 +6,13 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 18:07:04 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/08 18:07:43 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/09 15:10:02 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-static int	ft_checkpid(siginfo_t *info)
+int	ft_checkpid(siginfo_t *info)
 {
 	if (info->si_pid == vars.initpid)
 		return (0);

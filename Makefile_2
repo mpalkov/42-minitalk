@@ -1,0 +1,38 @@
+NAME		=	minitalk
+
+SRV_NAME	=	server
+
+CLI_NAME	=	client
+
+# --------------------------- DIRECTORIES ---------------------
+
+OBJ_DIR		=	obj/
+
+INCL_DIR	=	includes/
+
+LIBFT_DIR	=	utils/libft/
+
+# --------------------------- SOURCE FILES ---------------------
+
+SRC_CLI		=	client.c
+
+SRC_SRV		=	server.c \
+				server_utils.c \
+				server_utils2.c
+
+# --------------------------- RULES ---------------------
+
+INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/ -I./includes/
+
+SRV_OBJ		=	$(addprefix $(OBJ_DIR),$(SRC_SRV:.c=.o))
+SRV_DEP		=	$(addsuffix .d,$(basename $(SRV_OBJ)))
+
+
+
+all: $(NAME)
+
+$(NAME): $(SRV_NAME) $(CLI_NAME)
+
+-include $(SRV_DEPS)
+$(SRV_NAME):
+	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_SRV) -L$(LIBFT_DIR) -lft -o $@

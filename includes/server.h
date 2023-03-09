@@ -6,18 +6,20 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:05:46 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/06 17:02:09 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/09 16:14:36 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <signal.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "libft.h"
-#include "ft_printf.h"
+#ifndef SERVER_H
+# define SERVER_H
 
-#include <stdio.h>
-typedef struct	s_control
+# include <signal.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include "libft.h"
+# include "ft_printf.h"
+
+typedef struct s_control
 {
 	char	*str;
 	size_t	len;
@@ -30,3 +32,15 @@ typedef struct	s_control
 	int		sig_processed;
 
 }	t_control;
+
+static int	ft_rcvbits(int sig);
+static void	ft_sigusr(int sig, siginfo_t *sinfo, void *ptr);
+static int	ft_siginit(struct sigaction *s_sa);
+static int	ft_loop(void);
+int			ft_checkpid(siginfo_t *info);
+void		ft_free_exit(void);
+int			ft_restartsrv(void);
+int			ft_timeoutcheck(void);
+void		ft_resetvars(void);
+
+#endif
