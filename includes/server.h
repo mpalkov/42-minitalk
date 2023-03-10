@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/24 13:05:46 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/09 16:14:36 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/10 11:34:08 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static int	ft_loop(void);
 int			ft_checkpid(siginfo_t *info);
 void		ft_free_exit(void);
 int			ft_restartsrv(void);
+int			ft_printpid();
 int			ft_timeoutcheck(void);
 void		ft_resetvars(void);
 

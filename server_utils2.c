@@ -6,11 +6,13 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 18:07:04 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/09 15:10:02 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/10 11:42:34 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+extern t_control	vars;
 
 int	ft_checkpid(siginfo_t *info)
 {

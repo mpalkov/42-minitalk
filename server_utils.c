@@ -6,11 +6,13 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 18:02:29 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/09 15:17:47 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/10 11:42:32 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+extern t_control	vars;
 
 void	ft_free_exit(void)
 {

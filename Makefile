@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/03/09 16:52:21 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/03/10 11:28:51 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,11 @@ SRC_SRV		=	server.c \
 				server_utils.c \
 				server_utils2.c
 
-#---- DIRECTORIES  ----
+#---- DIRECTORIES ----
 
 LIBFT_DIR	=	utils/libft/
 
-OBJ_DIR		=	obj/
+#OBJ_DIR		=	obj/
 
 SRC_DIR		=	src/
 
@@ -48,7 +48,7 @@ CP			=	cp -f
 
 LIBFT		=	$(LIBFT_DIR)libft.a
 
-OBJ			=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
+#OBJ			=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
 INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/ -I./includes/
 
@@ -60,32 +60,37 @@ INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/ -I./includes/
 
 #SRCS		+=	$(addprefix $(UTILS_DIR),$(UTILS_PRINTF))
 
-all: make_libft $(NAME_SRV) $(NAME_CLI)
+all: $(NAME_SRV) $(NAME_CLI)
 
-make_libft:
-	$(MAKE) -C $(LIBFT_DIR)
+#all: make_libft $(NAME_SRV) $(NAME_CLI)
+
+#make_libft:
+#	$(MAKE) -C $(LIBFT_DIR)
 
 $(OBJ_DIR)%.o: $(SRCS_DIR)%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 
+#$(NAME_SRV): $(LIBFT) $(SRC_SRV)
 
 -include $(DEPS)
-$(NAME_SRV): $(LIBFT) $(SRC_SRV)
+$(NAME_SRV): $(SRC_SRV)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_SRV) -L$(LIBFT_DIR) -lft -o $@
 
-$(NAME_CLI): $(LIBFT) $(SRC_CLI)
+#$(NAME_CLI): $(LIBFT) $(SRC_CLI)
+
+$(NAME_CLI): $(SRC_CLI)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_CLI) -L$(LIBFT_DIR) -lft -o $@
 
 clean:
-	$(MAKE) clean -C $(LIBFT_DIR)
+#	$(MAKE) clean -C $(LIBFT_DIR)
 	$(RM) -r $(OBJ_DIR)
 	$(RM) -r *.d 
 
 fclean: clean
 	$(RM) $(NAME)
-	$(MAKE) fclean -C $(LIBFT_DIR)
+#	$(MAKE) fclean -C $(LIBFT_DIR)
 
 re: fclean all
 
