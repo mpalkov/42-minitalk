@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.h                                           :+:      :+:    :+:   */
+/*   client_bonus.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/08 17:51:20 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/10 15:18:24 by mpalkov          ###   ########.fr       */
+/*   Created: 2023/03/10 14:51:51 by mpalkov           #+#    #+#             */
+/*   Updated: 2023/03/10 14:53:27 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_H
-# define CLIENT_H
+#ifndef CLIENT_BONUS_H
+# define CLIENT_BONUS_H
 # include <unistd.h>	//write
 # include <signal.h>	//kill
 # include <sys/types.h>	//pid_t

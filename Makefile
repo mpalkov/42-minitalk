@@ -6,13 +6,17 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/03/10 11:28:51 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/03/10 15:17:29 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME_CLI	=	client
 
 NAME_SRV	=	server
+
+NAME_C_BNS	=	client_bonus
+
+NAME_S_BNS	=	server_bonus
 
 #---- FILES ----
 
@@ -21,6 +25,13 @@ SRC_CLI		=	client.c
 SRC_SRV		=	server.c \
 				server_utils.c \
 				server_utils2.c
+
+SRC_C_BNS	=	bonus/client_bonus.c
+
+SRC_S_BNS	=	bonus/server_bonus.c \
+				bonus/server_utils_bonus.c \
+				bonus/server_utils2_bonus.c
+
 
 #---- DIRECTORIES ----
 
@@ -62,6 +73,8 @@ INCLUDE		=	-I./utils/libft/includes/ -I./utils/libft/ -I./includes/
 
 all: $(NAME_SRV) $(NAME_CLI)
 
+bonus: $(NAME_C_BNS) $(NAME_S_BNS)
+
 #all: make_libft $(NAME_SRV) $(NAME_CLI)
 
 #make_libft:
@@ -70,7 +83,6 @@ all: $(NAME_SRV) $(NAME_CLI)
 $(OBJ_DIR)%.o: $(SRCS_DIR)%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
-
 
 #$(NAME_SRV): $(LIBFT) $(SRC_SRV)
 
@@ -82,6 +94,16 @@ $(NAME_SRV): $(SRC_SRV)
 
 $(NAME_CLI): $(SRC_CLI)
 	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_CLI) -L$(LIBFT_DIR) -lft -o $@
+
+
+-include $(DEPS)
+$(NAME_S_BNS): $(SRC_S_BNS)
+	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_S_BNS) -L$(LIBFT_DIR) -lft -o $@
+
+#$(NAME_CLI): $(LIBFT) $(SRC_CLI)
+
+$(NAME_C_BNS): $(SRC_C_BNS)
+	$(CC) $(CFLAGS) $(INCLUDE) $(SRC_C_BNS) -L$(LIBFT_DIR) -lft -o $@
 
 clean:
 #	$(MAKE) clean -C $(LIBFT_DIR)

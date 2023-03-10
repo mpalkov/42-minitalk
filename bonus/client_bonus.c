@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/24 12:21:31 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/10 14:42:23 by mpalkov          ###   ########.fr       */
+/*   Created: 2023/03/10 14:48:41 by mpalkov           #+#    #+#             */
+/*   Updated: 2023/03/10 14:48:45 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "client.h"
+#include "client_bonus.h"
 
 static int	fn_checkerr(int argc, char **argv)
 {

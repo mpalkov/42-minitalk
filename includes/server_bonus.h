@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.h                                           :+:      :+:    :+:   */
+/*   server_bonus.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/24 13:05:46 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/10 14:54:57 by mpalkov          ###   ########.fr       */
+/*   Created: 2023/03/10 14:53:37 by mpalkov           #+#    #+#             */
+/*   Updated: 2023/03/10 14:55:04 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_H
-# define SERVER_H
+#ifndef SERVER_BONUS_H
+# define SERVER_BONUS_H
 
 # include <signal.h>
 # include <stdlib.h>
