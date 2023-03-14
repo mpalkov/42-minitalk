@@ -6,11 +6,11 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 14:47:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/02/10 14:50:15 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/14 15:56:04 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include "libft.h"
 
 int	ft_ptr_freenull(void *x_ptr)
 {

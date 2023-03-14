@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/12 15:39:56 by mpalkov           #+#    #+#              #
-#    Updated: 2023/02/21 14:13:21 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/03/14 15:55:15 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ SRCS		+=	ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
 			   	ft_lstclear_bonus.c ft_lstdelone_bonus.c ft_lstiter_bonus.c \
 			   	ft_lstlast_bonus.c ft_lstmap_bonus.c ft_lstnew_bonus.c \
 			   	ft_lstsize_bonus.c \
-				ft_ptr_freenull.c
+			   	ft_ptr_freenull.c
 
 # ---------------- FT_PRINTF ---------------------------------------------------
 
@@ -66,13 +66,14 @@ UTLS_PRINTF	=	ft_printf_char_functions.c \
 				ft_printf_num_functions.c \
 				ft_printf_hex_ptr_functions.c
 
-PRINTF_FLS	+=	$(addprefix $(PRINTF_DIR), $(addprefix $(PFSRC_DIR), $(SRCS_PRINTF)))
+PRINTF_FLS	+=	$(addprefix $(PRINTF_DIR),$(addprefix $(PFSRC_DIR),\
+			   	$(SRCS_PRINTF)))
 
-PRINTF_FLS	+=	$(addprefix $(PRINTF_DIR), \
-				$(addprefix $(PFUTLS_DIR), $(UTLS_PRINTF)))
+PRINTF_FLS	+=	$(addprefix $(PRINTF_DIR),\
+				$(addprefix $(PFUTLS_DIR),$(UTLS_PRINTF)))
 
 
-# ---------------- FT_GET_NEXT_LINE ---------------------------------------------------
+# ---------------- FT_GET_NEXT_LINE --------------------------------------------
 
 SRCS_GNL	=	get_next_line.c get_next_line_utils.c
 
@@ -91,11 +92,11 @@ CP			=	cp -pf
 
 # ---- RULES -------------------------------------------------------------------
 
-OBJS		+=	$(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
-OBJS		+=  $(addprefix $(OBJ_DIR), $(PRINTF_FLS:.c=.o))
-OBJS		+=  $(addprefix $(OBJ_DIR), $(GNL_FLS:.c=.o))
+OBJS		+=	$(addprefix $(OBJ_DIR),$(SRCS:.c=.o))
+OBJS		+=  $(addprefix $(OBJ_DIR),$(PRINTF_FLS:.c=.o))
+OBJS		+=  $(addprefix $(OBJ_DIR),$(GNL_FLS:.c=.o))
 
-DEPS		=	$(addsuffix .d, $(basename $(OBJS)))
+DEPS		=	$(addsuffix .d,$(basename $(OBJS)))
 
 INCLUDE		=	-I./ -I./includes/
 
