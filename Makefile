@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/03/14 15:56:07 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/03/15 18:21:27 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -108,9 +108,8 @@ bonus: make_libft $(NAME_C_BNS) $(NAME_S_BNS)
 
 make_libft:
 	@echo "$(GREEN)	Calling Libft make $(DEFCOLOR)"
-	$(MAKE) -Cs $(LIBFT_DIR)
-
-#$(NAME_SRV): $(LIBFT) $(SRC_SRV)
+	@$(MAKE) -C $(LIBFT_DIR)
+#	@echo "$(GREEN)	Calling Libft make $(DEFCOLOR)"
 
 $(OBJ_DIR)%.o: %.c Makefile
 	@mkdir -p $(@D)
@@ -122,37 +121,32 @@ $(OBJ_DIR)%.o: %.c Makefile
 
 $(NAME_SRV): $(OBJ_SRV) $(LIBFT)
 	@echo "$(GREEN)	Creating binary: $@ $(DEFCOLOR)"
-	$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_SRV) -L$(LIBFT_DIR) -lft -o $@
-
-#$(NAME_CLI): $(LIBFT) $(SRC_CLI)
+	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_SRV) -L$(LIBFT_DIR) -lft -o $@
 
 $(NAME_CLI): $(OBJ_CLI) $(LIBFT)
 	@echo "$(GREEN)	Creating binary: $@ $(DEFCOLOR)"
-	$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_CLI) -L$(LIBFT_DIR) -lft -o $@
-
+	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_CLI) -L$(LIBFT_DIR) -lft -o $@
 
 -include $(DEPS_BNS)
 
 $(NAME_S_BNS): $(OBJ_S_BNS)
 	@echo "$(GREEN)	Creating binary: $@ $(DEFCOLOR)"
-	$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_S_BNS) -L$(LIBFT_DIR) -lft -o $@
-
-#$(NAME_CLI): $(LIBFT) $(SRC_CLI)
+	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_S_BNS) -L$(LIBFT_DIR) -lft -o $@
 
 $(NAME_C_BNS): $(OBJ_C_BNS)
 	@echo "$(GREEN)	Creating binary: $@ $(DEFCOLOR)"
-	$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_C_BNS) -L$(LIBFT_DIR) -lft -o $@
+	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJ_C_BNS) -L$(LIBFT_DIR) -lft -o $@
 
 clean:
 	@echo "$(ORANGE)	Cleaning residual .o and .d files$(DEFCOLOR)"
-#	$(MAKE) clean -sC $(LIBFT_DIR)
-	$(RM) -r $(OBJ_DIR)
-	$(RM) *.d
+	@$(MAKE) clean -sC $(LIBFT_DIR)
+	@$(RM) -r $(OBJ_DIR)
 
 fclean: clean
 	@echo "$(ORANGE)	Cleaning main binary files$(DEFCOLOR)"
-	$(RM) $(NAME_CLI) $(NAME_SRV) $(NAME_C_BNS) $(NAME_S_BNS)
-#	$(MAKE) fclean -C $(LIBFT_DIR)
+	@$(RM) $(NAME_CLI) $(NAME_SRV) $(NAME_C_BNS) $(NAME_S_BNS)
+	@echo "$(ORANGE)	Libft fclean$(DEFCOLOR)"
+	@$(MAKE) fclean -sC $(LIBFT_DIR)
 
 re:
 	$(MAKE) fclean 

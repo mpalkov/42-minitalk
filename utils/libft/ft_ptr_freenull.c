@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/10 14:47:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/14 15:56:04 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/15 17:01:52 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,19 @@ int	ft_ptr_freenull(void *x_ptr)
 	}
 	return (0);
 }
-
+//
 // this function serves to free pointer of any type
 // (previously created with malloc/calloc...) and set it to NULL;
-
+//
 //USE:
-/* int	main(void)
-{
-	char	*c;
-	int		*i;
-
-	i = malloc(8);
-	c = malloc(8);
-	ft_ptr_freenull(&c);
-	ft_ptr_freenull(&i);
-	return (0);
-} */
+// int	main(void)
+//{
+//	char	*c;
+//	int		*i;
+//
+//	i = malloc(8);
+//	c = malloc(8);
+//	ft_ptr_freenull(&c);
+//	ft_ptr_freenull(&i);
+//	return (0);
+//}
