@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/04/04 18:04:49 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/03/10 14:40:54 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	ft_loop(void)
 {
 	if (!g_vars.sig_processed)
 	{
-		g_vars.status = ft_rcvbits(g_vars.sig - SIGUSR1);
+	g_vars.status = ft_rcvbits(g_vars.sig - SIGUSR1);
 		if (g_vars.status == 1)
 		{
 			if (ft_printf("\n\nReceived string length is: %d bytes\n"
@@ -106,5 +106,3 @@ int	main(void)
 	}
 	return (0);
 }
-
-/*		Global variable used due to fixed sigaction arguments. */
