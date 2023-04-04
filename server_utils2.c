@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 18:07:04 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/10 14:40:29 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/04/04 18:42:23 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_checkpid(siginfo_t *info)
 }
 
 /*		No free in this function on error, because no malloc was created yet.
- *		Exit directly
+ *		Exits directly.
  *		No write protection, because program exits anyways right after write. */
 int	ft_siginit(struct sigaction *s_sa)
 {
@@ -39,19 +39,15 @@ int	ft_siginit(struct sigaction *s_sa)
 		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
 		exit(EXIT_FAILURE);
 	}
-	else
-		ft_printf("sigaction 1 OK\n");
 	if (sigaction(SIGUSR2, s_sa, NULL) < 0)
 	{
 		write(STDERR_FILENO, "Error setting up sigaction().\n", 30);
 		exit(EXIT_FAILURE);
 	}
-	else
-		ft_printf("sigaction 2 OK\n");
 	return (0);
 }
 
-//	g_vars.i == number of bit received in total (starting at 0)
+//		g_vars.i == number of bit received in total (starting at 0)
 void	ft_sigusr(int sig, siginfo_t *sinfo, void *ptr)
 {
 	(void)ptr;
