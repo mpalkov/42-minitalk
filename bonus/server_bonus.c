@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 14:49:10 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/03/10 14:49:16 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/04/05 14:55:34 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static int	ft_loop(void)
 		if (g_vars.status == 1)
 		{
 			if (ft_printf("\n\nReceived string length is: %d bytes\n"
-					"String: %s\n\nAwaiting new transmission\n", \
+					"String: %s\n\nAwaiting new message.\n", \
 					g_vars.len, g_vars.str) == -1)
 				ft_free_exit();
 			ft_restartsrv();
