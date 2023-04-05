@@ -6,7 +6,7 @@
 #    By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/07 16:18:33 by mpalkov           #+#    #+#              #
-#    Updated: 2023/03/15 18:21:27 by mpalkov          ###   ########.fr        #
+#    Updated: 2023/04/05 14:47:28 by mpalkov          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ CYAN		:=	\033[0;96m
 WHITE		:=	\033[0;97m
 
 #-------------------------------------------------------------------------------
-#---- FILES ----
+#		FILES
 
 SRC_CLI		:=	client.c
 
@@ -52,7 +52,7 @@ SRCS		+=	$(SRC_CLI) $(SRC_SRV)
 SRCS_BNS	+=	$(SRC_C_BNS) $(SRC_S_BNS)
 
 #-------------------------------------------------------------------------------
-#---- DIRECTORIES ----
+#		DIRECTORIES
 
 LIBFT_DIR	:=	utils/libft/
 
@@ -63,7 +63,7 @@ SRC_DIR		:=	src/
 UTILS_DIR	:=	utils/
 
 #-------------------------------------------------------------------------------
-#---- COMMANDS ----
+#		COMMANDS
 
 CC			:=	cc
 
@@ -78,7 +78,7 @@ CP			:=	cp -f
 MAKEFLAGS	+=	--no-print-directory
 
 #-------------------------------------------------------------------------------
-#---- RULES ----
+#		RULES
 
 LIBFT		=	$(LIBFT_DIR)libft.a
 
@@ -109,13 +109,11 @@ bonus: make_libft $(NAME_C_BNS) $(NAME_S_BNS)
 make_libft:
 	@echo "$(GREEN)	Calling Libft make $(DEFCOLOR)"
 	@$(MAKE) -C $(LIBFT_DIR)
-#	@echo "$(GREEN)	Calling Libft make $(DEFCOLOR)"
 
 $(OBJ_DIR)%.o: %.c Makefile
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(INCLUDE) -c -o $@ $<
 	@echo "$(GREEN)	Compiling: $< -> $@ $(DEFCOLOR)"
-
 
 -include $(DEPS)
 
