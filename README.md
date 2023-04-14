@@ -2,9 +2,11 @@
 *The purpose of this project is to code a small data exchange program
 using UNIX signals.*
 
-[TOC]
+CONTENTS:
+1. Project instructions
+2. Personal notes
 
-##Project instructions
+## Project instructions
 - Name your executable files client and server.
 - You have to turn in a Makefile which will compile your source files. It must not
 relink.
@@ -30,7 +32,7 @@ functions:
  - usleep
  - exit
 
-##Mandatory Part
+## Mandatory Part
 You must create a communication program in the form of a client and a server.
 
 - The server must be started first. After its launch, it has to print its PID.
@@ -51,7 +53,7 @@ UNIX signals.
 >  ℹ️ Linux system does NOT queue signals when you already have pending
 signals of this type!
 
-##Bonus part
+## Bonus part
 Bonus list:
 - The server acknowledges every message received by sending back a signal to the
 client.
