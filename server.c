@@ -6,7 +6,7 @@
 /*   By: mpalkov <mpalkov@student.42barcelo>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 12:50:15 by mpalkov           #+#    #+#             */
-/*   Updated: 2023/04/05 14:32:48 by mpalkov          ###   ########.fr       */
+/*   Updated: 2023/04/05 15:40:56 by mpalkov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static int	ft_rcvbits(int sig)
 		g_vars.len = sig << g_vars.i | g_vars.len;
 	if (g_vars.i == (ssize_t)(sizeof(g_vars.len) * 8 - 1))
 	{
-		g_vars.str = calloc(g_vars.len + 1, sizeof(char));
+		g_vars.str = ft_calloc(g_vars.len + 1, sizeof(char));
 		if (!g_vars.str)
 		{
 			write(STDERR_FILENO, "Error! Malloc problems.\n", 24);
