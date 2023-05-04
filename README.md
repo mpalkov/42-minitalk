@@ -83,5 +83,6 @@ After thinking and consulting my ideas with my peers, I have decided to use the 
   - **Avoid simultaneous transmissions to a single server:**
   When a transmission starts, server stores `initial_pid` value of PID of the first signal received and handles only the signals received from this particular PID.
 
-And that's all, anyways it's much more than stated in subject.
+And that's all.
+...anyways, it's waaay more than the mandatory requirements.
  
